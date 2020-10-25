@@ -1,0 +1,45 @@
+<html xmlns:form="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="UTF-8">
+    <title>New User</title>
+    <style>table th, table td {padding: 5px;}</style>
+</head>
+<body>
+    <div align="center">
+        <h2>NEW MOTHERFUCKER USER</h2>
+        <h3><a th:href="@{/logout}">Logout</a></h3>
+        <form action="/admin/save" method="POST" modelattribute="user">
+            <table border="0" cellpadding="5">
+                <tr>
+                    <td>Name: </td>
+                    <td><input type=text name="name" id="name"/></td>
+                </tr>
+                <tr>
+                    <td>Surname: </td>
+                    <td><input type=text name="surname" id="surname"/></td>
+                </tr>
+                <tr>
+                    <td>Address: </td>
+                    <td><input type=text name="address" id="address"/></td>
+                </tr>
+                <tr>
+                    <td>Password: </td>
+                    <td><input type=text name="password" id="password"/></td>
+                </tr>
+                <tr>
+                    <td>Roles: </td>
+                    <td><select name="roles" id="roles">
+                        <option value="ROLE_USER">ROLES_USER</option>
+                        <option value="ROLE_ADMIN">ROLE_ADMIN</option>
+                    </select></td>
+                </tr>
+                <tr>
+                    <td colspan="2" align="center"><input type="submit" value="Save"></td>
+                </tr>
+                
+            </table>
+        </form>
+    </div>
+</body>
+</html>

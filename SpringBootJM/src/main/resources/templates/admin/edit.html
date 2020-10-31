@@ -1,0 +1,26 @@
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>New User</title>
+    <style>table th, table td {padding: 5px;}</style>
+</head>
+<body>
+<div th:replace="~{/admin/header.html :: header (${userName.getName()}, ${userName.getRoles()})}"></div>
+    <div align="center">
+        <h2>Edit user</h2>
+        <form th:action="@{/admin/editUser/{id}(id=${user.getId()})}" method="post" th:object="${user}">
+            <label for="name">Name</label>
+            <input type="text" th:field="*{name}" id="name" placeholder="Name">
+            <span></span>
+            <label for="surname">Surname</label>
+            <input type="text" th:field="*{surname}" id="surname" placeholder="Surname">
+            <span></span>
+            <label for="address">Address</label>
+            <input type="text" th:field="*{address}" id="address" placeholder="Address">
+            <span></span>
+            <input type="submit" value="Update User">
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+    <nav class="navbar sticky-top navbar-dark bg-dark" th:fragment="header (username, roles)">
+        <span class="navbar-text" th:text="${username + ' with roles: ' + roles}"></span>
+        <span class="form-inline"><a th:href="@{/logout}" th:align="right">Logout</a></span>
+    </nav>
+</body>
+</html>

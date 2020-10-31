@@ -13,6 +13,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -42,10 +44,8 @@ public class UserServiceJpaImpl implements UserService, UserDetailsService {
         if (userFromDB != null) {
             return;
         }
-        Set<Role> roleSet = new HashSet<>();
-        roleSet.add(roleRepo.findOneByName("ROLE_USER"));
-        user.setRoles(roleSet);
-        userRepo.save(user);
+        User tempUser = new User(user.getName(), user.getSurname(), user.getAddress(), user.getPassword(), user.getRoles());
+        userRepo.save(tempUser);
     }
 
     @Override
@@ -59,11 +59,12 @@ public class UserServiceJpaImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public void changeUser(Long id, String name, String surname, String address) {
+    public void changeUser(Long id, String name, String surname, String address, Set<Role> roles) {
         User user = userRepo.getOne(id);
         user.setName(name);
         user.setSurname(surname);
         user.setAddress(address);
+        user.setRoles(roles);
         userRepo.save(user);
     }
 
@@ -97,5 +98,10 @@ public class UserServiceJpaImpl implements UserService, UserDetailsService {
 
     private Collection<? extends GrantedAuthority> rolesToAuthorities(Collection<Role> roles){
         return roles.stream().map(r -> new SimpleGrantedAuthority(r.getRole())).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Role> getAllRoles(){
+        return roleRepo.findAll();
     }
 }

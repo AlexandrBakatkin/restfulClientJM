@@ -1,7 +1,7 @@
 package com.bakatkin.crud.controller;
 
 import com.bakatkin.crud.model.User;
-import com.bakatkin.crud.service.UserServiceJpaImpl;
+import com.bakatkin.crud.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -11,23 +11,30 @@ import java.security.Principal;
 
 @Controller
 public class UserController {
-    UserServiceJpaImpl userService;
+
+    UserService userService;
 
     @Autowired
-    public void setUserService(UserServiceJpaImpl userService) {
+    public void setUserService(UserService userService) {
         this.userService = userService;
     }
 
     @GetMapping(value = "/")
-    public String printWelcome(ModelMap model) {
+    public String printWelcome(ModelMap model, Principal principal) {
+        User user = userService.getByName(principal.getName());
+        model.addAttribute("userName", user);
         model.addAttribute("userList", userService.allUsers());
-        return "index";
+        model.addAttribute("allRoles", userService.getAllRoles());
+        return "admin/index";
     }
 
     @RequestMapping(value = "/admin/new")
-    public String newUser(ModelMap model){
+    public String newUser(ModelMap model, Principal principal){
+        User currentUser = userService.getByName(principal.getName());
+        model.addAttribute("userName", currentUser);
+        model.addAttribute("roles", userService.getAllRoles());
         User user = new User();
-        model.put("user", user);
+        model.addAttribute("user", user);
         return "admin/new";
     }
 
@@ -43,16 +50,18 @@ public class UserController {
         return "redirect:/";
     }
 
-    @RequestMapping(value = "/edit/{id}")
-    public String edit (@PathVariable("id") long id, ModelMap model){
+    @RequestMapping(value = "/admin/edit/{id}")
+    public String edit (@PathVariable("id") long id, ModelMap model, Principal principal){
+        User currentUser = userService.getByName(principal.getName());
         User user = userService.getById(id);
-        model.put("user", user);
-        return "edit";
+        model.addAttribute("userName", currentUser);
+        model.addAttribute("user", user);
+        return "admin/edit";
     }
 
-    @PostMapping(value = "/editUser/{id}")
+    @PostMapping(value = "/admin/editUser/{id}")
     public String editUser (@PathVariable("id") long id, @ModelAttribute("user") User user){
-        userService.changeUser(id, user.getName(), user.getSurname(), user.getAddress());
+        userService.changeUser(id, user.getName(), user.getSurname(), user.getAddress(), user.getRoles());
         return "redirect:/";
     }
 

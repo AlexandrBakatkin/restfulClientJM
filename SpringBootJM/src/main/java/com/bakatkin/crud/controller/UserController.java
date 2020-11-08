@@ -61,7 +61,7 @@ public class UserController {
 
     @PostMapping(value = "/admin/editUser/{id}")
     public String editUser (@PathVariable("id") long id, @ModelAttribute("user") User user){
-        userService.changeUser(id, user.getName(), user.getSurname(), user.getAddress(), user.getRoles());
+        userService.changeUser(id, user.getName(), user.getSurname(), user.getAddress(), user.getPassword(), user.getRoles());
         return "redirect:/";
     }
 

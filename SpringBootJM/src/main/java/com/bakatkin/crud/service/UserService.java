@@ -12,9 +12,7 @@ public interface UserService {
 
     List<User> allUsers();
 
-    void deleteUser(User user);
-
-    void changeUser(Long id, String name, String surname, String address, Set<Role> roles);
+    void changeUser(Long id, String name, String surname, String password, String address, Set<Role> roles);
 
     void deleteById(Long id);
 

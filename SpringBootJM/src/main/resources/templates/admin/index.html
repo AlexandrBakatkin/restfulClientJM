@@ -21,9 +21,9 @@
     <div class="row">
         <!-- Левая панель основного блока-->
         <div class="bg-white col-md-2">
-            <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                <a class="nav-link active" href="/" role="tab" aria-selected="true">Admin</a>
-                <a class="nav-link" href="/admin/user/" aria-selected="false">User</a>
+            <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist">
+                <a class="nav-link active" href="/" role="tab">Admin</a>
+                <a class="nav-link" href="/user/" th:if="${not #lists.isEmpty(allRoles)}">User</a>
             </div>
         </div>
 
@@ -43,144 +43,217 @@
                                     All users
                                   </span>
             </nav>
+
             <table class="table table-striped table-hover table-condensed bg-white">
-                <thead>
-                    <tr>
-                        <th>id</th>
-                        <th>Name</th>
-                        <th>Surname</th>
-                        <th>Address</th>
-                        <th>Password</th>
-                        <th>Roles</th>
-                        <th>Edit</th>
-                        <th>Delete</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="userTemp : ${userList}">
-                        <td th:utext="${userTemp.getId()}">ID</td>
-                        <td th:utext="${userTemp.getName()}">Name</td>
-                        <td th:utext="${userTemp.getSurname()}">Surname</td>
-                        <td th:utext="${userTemp.getAddress()}">Address</td>
-                        <td th:utext="${userTemp.getPassword()}">Password</td>
-                        <td th:utext="${userTemp.getAuthorities()}">Roles</td>
-                        <td><button class="btn btn-info" data-toggle="modal" data-target="#editModal" th:attr="data-target='#editModal'+${userTemp.id}">Edit</button>
 
-                            <!-- Модальное окно редактирования пользователя -->
-
-                            <div th:id="editModal + ${userTemp.id}" class="modal fade">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h4 class="modal-title">Edit User</h4>
-                                            <button class="close" data-dismiss="modal">x</button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <form role="form" th:action="@{/admin/editUser/{id}(id=${userTemp.id})}" method="POST" th:object="${userTemp}">
-                                                <div class="form-group">
-                                                    <label for="ID">ID</label>
-                                                    <input type="text" class="form-control" name="id" id="ID" placeholder="ID" readonly th:value="${userTemp.id}">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="Name">Name</label>
-                                                    <input type="text" class="form-control" name="name" id="Name" placeholder="Name" th:value="${userTemp.name}">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="Surname">Surname</label>
-                                                    <input type="text" class="form-control" name="surname" id="Surname" placeholder="Surname" th:value="${userTemp.surname}">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="Address">Address</label>
-                                                    <input type="text" class="form-control" name="address" id="Address" placeholder="Address" th:value="${userTemp.address}">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="Password">Password</label>
-                                                    <input type="password" class="form-control" name="password" id="Password" placeholder="Password" th:value="${userTemp.password}">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="Roles">Roles</label>
-                                                    <select multiple size="2" name="roles" id="Roles">
-                                                        <option th:each="role : ${allRoles}" th:value="${role.id}" th:text="${role.role}"></option>
-                                                    </select>
-
-                                                </div>
-                                                <div>
-                                                    <button class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                    <input type="submit" class="btn btn-primary" value="Edit">
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- -->
-
-                        </td>
-                        <td><button class="btn btn-danger" data-toggle="modal" data-target="#deleteModal" th:attr="data-target='#deleteModal'+${userTemp.id}">Delete</button>
-
-                            <!-- Модальное окно удаления пользователя -->
-
-                            <div th:id="deleteModal + ${userTemp.id}" class="modal fade">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h4 class="modal-title">Delete User</h4>
-                                            <button class="close" data-dismiss="modal">x</button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <form role="form">
-                                                <div class="form-group">
-                                                    <label for="ID-del" class="text-center">ID</label>
-                                                    <input type="text" class="form-control" id="ID-del" placeholder="ID" readonly th:value="${userTemp.id}">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="Name-del">Name</label>
-                                                    <input type="text" class="form-control" id="Name-del" placeholder="Name" readonly th:value="${userTemp.name}">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="Surname-del">Surname</label>
-                                                    <input type="text" class="form-control" id="Surname-del" placeholder="Surname" readonly th:value="${userTemp.surname}">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="Address-del">Address</label>
-                                                    <input type="text" class="form-control" id="Address-del" placeholder="Address" readonly th:value="${userTemp.address}">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="Password-del">Password</label>
-                                                    <input type="password" class="form-control" id="Password-del" placeholder="Password" readonly th:value="${userTemp.password}">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="Roles-del">Roles</label>
-                                                    <input type="text" class="form-control" id="Roles-del" placeholder="Roles" readonly th:value="${userTemp.roles}">
-                                                </div>
-                                            </form>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                            <a class="btn btn-danger" th:href="@{/admin/delete/{id}(id=${userTemp.id})}">Delete</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- -->
-
-                        </td>
-                    </tr>
-                </tbody>
             </table>
         </div>
     </div>
 </div>
 
-
 <!-- Реализация модального окна удаления пользователя -->
+<div>
+    <div id="deleteModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form class="text-center">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Delete user</h4>
+                        <button class="close" data-dismiss="modal">x</button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <div class="container" style="max-width: 300px">
+                            <div>
+                                <label for="ID-del"><b>ID</b></label><br>
+                                <input name="ID-del" type="text" id="ID-del" class="form-control text-center" readonly/>
+                            </div>
+                            <br>
+                            <div>
+                                <label for="Name-del"><b>Name</b></label><br>
+                                <input name="Name-del" type="text" id="Name-del" class="form-control text-center" readonly/>
+                            </div>
+                            <br>
+                            <div>
+                                <label for="Surname-del"><b>Surname</b></label><br>
+                                <input name="Surname-del" type="text" id="Surname-del" class="form-control text-center" readonly/>
+                            </div>
+                            <br>
+                            <div>
+                                <label for="Address-del"><b>Address</b></label><br>
+                                <input name="Address-del" type="text" id="Address-del" class="form-control text-center" readonly/>
+                            </div>
+                            <br>
+                            <div>
+                                <label for="Password-del"><b>Password</b></label><br>
+                                <input name="Password-del" type="text" id="Password-del" class="form-control text-center" readonly/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button class="btn btn-danger" onclick="deleteUser()">Delete</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 
+<!-- Реализация модального окна редактирования пользователя -->
+<div>
+    <div id="editModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form class="text-center">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Edit user</h4>
+                        <button class="close" data-dismiss="modal">x</button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <div class="container" style="max-width: 300px">
+                            <div>
+                                <label for="ID-edit"><b>ID</b></label><br>
+                                <input name="ID-edit" type="text" id="ID-edit" class="form-control text-center" readonly/>
+                            </div>
+                            <br>
+                            <div>
+                                <label for="Name-edit"><b>Name</b></label><br>
+                                <input name="Name-edit" type="text" id="Name-edit" class="form-control text-center" />
+                            </div>
+                            <br>
+                            <div>
+                                <label for="Surname-edit"><b>Surname</b></label><br>
+                                <input name="Surname-edit" type="text" id="Surname-edit" class="form-control text-center" />
+                            </div>
+                            <br>
+                            <div>
+                                <label for="Address-edit"><b>Address</b></label><br>
+                                <input name="Address-edit" type="text" id="Address-edit" class="form-control text-center" />
+                            </div>
+                            <br>
+                            <div>
+                                <label for="Password-edit"><b>Password</b></label><br>
+                                <input name="Password-edit" type="text" id="Password-edit" class="form-control text-center" />
+                            </div>
+                            <div>
+                                <label for="Roles-edit"></label>
+                                <select id="Roles-edit" name="Roles-edit" multiple="multiple">
+                                    <option value="ROLE_ADMIN" >ROLE_ADMIN</option>
+                                    <option value="ROLE_USER" >ROLE_USER</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button class="btn btn-info" id="editUserButton">Edit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- Подключения JS и jQuery для Bootstrap'а-->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script>
+
+    const table = document.querySelector('.table-striped')
+    let localhost = 'http://localhost:8085/'
+    let getUser = localhost + 'getUser/'
+
+    //Заполнение таблицы allUsersTable
+    let allUsersTable = ""
+    let rolesTable = ""
+    fetch(localhost + 'usersAll/')
+        .then((response) => response.json())
+        .then(data => {
+            allUsersTable = '<tr>' + '<th>ID</th>' + '<th>Name</th>' + '<th>Surname</th>' + '<th>Address</th>' + '<th>Password</th>' + '<th>Roles</th>' + '<th>Edit</th>' + '<th>Delete</th>' + '</tr>'
+
+            data.forEach (user => {user.roles.forEach (role => {rolesTable += role.role + " "})
+                allUsersTable += '' +
+                    "<tr>" + "<td>" + user.id + "</td>" + "<td>" + user.name + "</td>" + "<td>" + user.surname + "</td>" + "<td>" + user.address + "</td>" + "<td>" + user.password + "</td>" + "<td><div>" + rolesTable + "</div></td>"+
+                    "<td><button type='submit' class='btn btn-info' data-toggle='modal' data-target='#editModal' onclick='getUserDetailEdit(" + user.id + ")'>Edit</button></td>"+
+                    "<td><button type='submit' class='btn btn-danger' data-toggle='modal' data-target='#deleteModal' onclick='getUserDetailDel(" + user.id + ")'>Delete</button></td>"+
+                    "</tr>"
+                rolesTable= ''
+            })
+            table.innerHTML = allUsersTable
+        })
+
+    //Функция удаления пользователя через модальное окно
+    function deleteUser(){
+        $.ajax({
+            type: 'DELETE',
+            url: localhost + 'deleteUser/' + document.getElementById('ID-del').value,
+            cache: false
+        });
+    }
+
+    //Функция редактирования пользователя через модальное окно
+    $("#editUserButton").click(function (event) {
+
+        let info = {}
+
+        info.id = $("#ID-edit").val()
+        info.name = $("#Name-edit").val()
+        info.surname = $("#Surname-edit").val()
+        info.address = $("#Address-edit").val()
+        info.password = $("#Password-edit").val()
+        info.roles = []
+
+        let rolesList = $("#Roles-edit").val()
+
+        for (let i = 0; i < rolesList.length; i++) {
+            if (rolesList[i] === 'ROLE_USER') {
+                info.roles.push({
+                    id: 2,
+                    name: "ROLE_USER"
+                })
+            }
+            if (rolesList[i] === 'ROLE_ADMIN') {
+                info.roles.push({
+                    id: 1,
+                    name: "ROLE_ADMIN"
+                })
+            }
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '/updateUser/',
+            contentType: 'application/json',
+            dataType: 'json',
+            data: JSON.stringify(info)
+        })
+    })
+
+    //Вывод информации в модальное окно о текущем пользователе по ID для удаления
+    function getUserDetailDel(id){
+        $.getJSON(getUser + id, function (userInfo) {
+            document.getElementById('ID-del').value = userInfo.id;
+            document.getElementById('Name-del').value = userInfo.name;
+            document.getElementById('Surname-del').value = userInfo.surname;
+            document.getElementById('Address-del').value = userInfo.address;
+            document.getElementById('Password-del').value = userInfo.password;
+        })
+    }
+
+    //Вывод информации в модальное о текущем пользователе по ID для редактирования
+    function getUserDetailEdit(id){
+        $.getJSON(getUser + id, function (userInfo) {
+            document.getElementById('ID-edit').value = userInfo.id;
+            document.getElementById('Name-edit').value = userInfo.name;
+            document.getElementById('Surname-edit').value = userInfo.surname;
+            document.getElementById('Address-edit').value = userInfo.address;
+            document.getElementById('Password-edit').value = userInfo.password;
+        })
+    }
+</script>
 </body>
 </html>

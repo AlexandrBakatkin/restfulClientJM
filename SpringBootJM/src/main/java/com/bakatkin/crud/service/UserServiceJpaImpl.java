@@ -13,10 +13,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -40,12 +37,7 @@ public class UserServiceJpaImpl implements UserService, UserDetailsService {
     @Transactional
     @Override
     public void add(User user) {
-        User userFromDB = userRepo.findByUserName(user.getName());
-        if (userFromDB != null) {
-            return;
-        }
-        User tempUser = new User(user.getName(), user.getSurname(), user.getAddress(), user.getPassword(), user.getRoles());
-        userRepo.save(tempUser);
+        userRepo.save(user);
     }
 
     @Override
@@ -54,16 +46,13 @@ public class UserServiceJpaImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public void deleteUser(User user) {
-        userRepo.delete(user);
-    }
-
-    @Override
-    public void changeUser(Long id, String name, String surname, String address, Set<Role> roles) {
+    @Transactional
+    public void changeUser(Long id, String name, String surname, String address, String password, Set<Role> roles) {
         User user = userRepo.getOne(id);
         user.setName(name);
         user.setSurname(surname);
         user.setAddress(address);
+        user.setPassword(password);
         user.setRoles(roles);
         userRepo.save(user);
     }

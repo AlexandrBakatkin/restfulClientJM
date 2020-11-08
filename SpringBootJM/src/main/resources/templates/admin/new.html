@@ -41,27 +41,28 @@
                 </nav>
 
                 <div class="bg-white">
-                    <form action="#" th:action="@{/admin/save}" method="POST" th:object="${user}">
+                    <form id="addUserForm">
                         <div class="form-group" align="center">
                             <div class="col-sm-3" >
                                 <h6 class="font-weight-bolder">Name</h6>
-                                <input type=text name="name" id="name" class="form-control"/>
+                                <input type=text name="new-name" id="new-name" class="form-control"/>
 
                                 <h6 class="font-weight-bolder">Surname</h6>
-                                <input type=text name="surname" id="surname" class="form-control"/>
+                                <input type=text name="new-surname" id="new-surname" class="form-control"/>
 
                                 <h6 class="font-weight-bolder">Address</h6>
-                                <input type=text name="address" id="address" class="form-control"/>
+                                <input type=text name="new-address" id="new-address" class="form-control"/>
 
                                 <h6 class="font-weight-bolder">Password</h6>
-                                <input type=password name="password" id="password" class="form-control"/>
+                                <input type=password name="new-password" id="new-password" class="form-control"/>
 
                                 <h6 class="font-weight-bolder">Roles</h6>
-                                <select multiple size="2" th:name="roles" th:field="*{roles}" id="roles" class="form-control">
-                                    <option th:each="role : ${roles}" th:value="${role.id}" th:text="${role}"></option>
+                                <select id="new-roles" name="new-roles" multiple="multiple">
+                                    <option value="ROLE_ADMIN" >ROLE_ADMIN</option>
+                                    <option value="ROLE_USER" >ROLE_USER</option>
                                 </select>
                                 <h6></h6>
-                                <input type="submit" value="Add new user" class="btn btn-success">
+                                <button value="Add new user" id="addUser" class="btn btn-success">New user</button>
                             </div>
                         </div>
                     </form>
@@ -71,3 +72,49 @@
     </div>
 </body>
 </html>
+<!-- Подключения JS и jQuery для Bootstrap'а-->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+<script>
+
+    $("#addUser").click(function(event) {
+
+        let info = {}
+
+
+        info.name = $("#new-name").val()
+        info.surname = $("#new-surname").val()
+        info.address = $("#new-address").val()
+        info.password = $("#new-password").val()
+        info.roles = []
+
+        let rolesList = $("#new-roles").val()
+
+        for (let i = 0; i < rolesList.length; i++) {
+            if (rolesList[i] === 'ROLE_USER') {
+                info.roles.push({
+                    id: 2,
+                    name: "ROLE_USER"
+                })
+            }
+            if (rolesList[i] === 'ROLE_ADMIN') {
+                info.roles.push({
+                    id: 1,
+                    name: "ROLE_ADMIN"
+                })
+            }
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '/createUser/',
+            contentType: 'application/json',
+            dataType: 'json',
+            data: JSON.stringify(info)
+        })
+    })
+</script>
